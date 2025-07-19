@@ -2,22 +2,32 @@ import 'package:flutter/material.dart';
 
 class ColorUtils {
   static Color getEarthquakeColor(double magnitude) {
-    if (magnitude < 5.0) {
+    if (magnitude <= 3.0) {
+      return Colors.blue;
+    } else if (magnitude <= 5.0) {
       return Colors.yellow;
-    } else if (magnitude < 7.0) {
-      return Colors.orange;
     } else {
       return Colors.red;
     }
   }
 
   static String getEarthquakeEmoji(double magnitude) {
-    if (magnitude < 5.0) {
+    if (magnitude <= 3.0) {
+      return '🔵';
+    } else if (magnitude <= 5.0) {
       return '🟡';
-    } else if (magnitude < 7.0) {
-      return '🟠';
     } else {
       return '🔴';
+    }
+  }
+
+  static Color getBackgroundColor(double magnitude) {
+    if (magnitude <= 3.0) {
+      return Colors.blue.withOpacity(0.1);
+    } else if (magnitude <= 5.0) {
+      return Colors.yellow.withOpacity(0.1);
+    } else {
+      return Colors.red.withOpacity(0.1);
     }
   }
 
