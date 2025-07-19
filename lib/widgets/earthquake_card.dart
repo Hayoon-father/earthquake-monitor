@@ -17,7 +17,7 @@ class EarthquakeCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final dateFormat = DateFormat('yyyy-MM-dd HH:mm');
     final color = ColorUtils.getEarthquakeColor(earthquake.magnitude);
-    final emoji = ColorUtils.getEarthquakeEmoji(earthquake.magnitude);
+    final imagePath = ColorUtils.getEarthquakeImagePath(earthquake.magnitude);
     final intensityDesc = ColorUtils.getIntensityDescription(earthquake.maxIntensity);
 
     return Card(
@@ -32,16 +32,24 @@ class EarthquakeCard extends StatelessWidget {
               Row(
                 children: [
                   Container(
-                    width: 40,
-                    height: 40,
+                    width: 50,
+                    height: 50,
                     decoration: BoxDecoration(
-                      color: color,
+                      color: color.withOpacity(0.1),
                       shape: BoxShape.circle,
+                      border: Border.all(color: color.withOpacity(0.3)),
                     ),
                     child: Center(
-                      child: Text(
-                        emoji,
-                        style: const TextStyle(fontSize: 20),
+                      child: Image.asset(
+                        imagePath,
+                        width: 35,
+                        height: 35,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Text(
+                            ColorUtils.getEarthquakeEmoji(earthquake.magnitude),
+                            style: const TextStyle(fontSize: 20),
+                          );
+                        },
                       ),
                     ),
                   ),

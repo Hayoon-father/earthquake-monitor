@@ -64,6 +64,14 @@ class _HomeScreenState extends State<HomeScreen> {
     super.dispose();
   }
 
+  static Widget _imageErrorBuilder(BuildContext context, Object error, StackTrace? stackTrace) {
+    return const Icon(
+      Icons.info_outline,
+      size: 100,
+      color: Colors.grey,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -127,10 +135,50 @@ class _HomeScreenState extends State<HomeScreen> {
     }
 
     if (_earthquakes.isEmpty) {
-      return const Center(
-        child: Text(
-          '지진 데이터가 없습니다',
-          style: TextStyle(fontSize: 18),
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Image(
+              image: AssetImage('assets/images/earthquake_safety.png'),
+              width: 200,
+              height: 200,
+              errorBuilder: _imageErrorBuilder,
+            ),
+            const SizedBox(height: 24),
+            Text(
+              '현재 지진 데이터가 없습니다',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.grey[700],
+              ),
+            ),
+            const SizedBox(height: 12),
+            Text(
+              '안전한 상태입니다',
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.grey[600],
+              ),
+            ),
+            const SizedBox(height: 20),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+              decoration: BoxDecoration(
+                color: Colors.blue.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Text(
+                '🏠 책상 아래로 대피하여 안전을 확보하세요',
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.blue[700],
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ],
         ),
       );
     }
@@ -156,7 +204,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final latestEarthquake = _earthquakes.first;
     final backgroundColor = ColorUtils.getBackgroundColor(latestEarthquake.magnitude);
     final color = ColorUtils.getEarthquakeColor(latestEarthquake.magnitude);
-    final emoji = ColorUtils.getEarthquakeEmoji(latestEarthquake.magnitude);
+    final imagePath = ColorUtils.getEarthquakeImagePath(latestEarthquake.magnitude);
     final dateFormat = DateFormat('yyyy년 MM월 dd일 HH:mm');
     
     return Container(
@@ -170,35 +218,63 @@ class _HomeScreenState extends State<HomeScreen> {
             width: 2,
           ),
         ),
+        image: DecorationImage(
+          image: AssetImage(imagePath),
+          alignment: Alignment.center,
+          opacity: 0.15,
+          fit: BoxFit.contain,
+        ),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(24.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
+        padding: const EdgeInsets.all(16.0),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
             Text(
               '최신 지진 정보',
               style: TextStyle(
-                fontSize: 24,
+                fontSize: 22,
                 fontWeight: FontWeight.bold,
                 color: color,
+                shadows: [
+                  Shadow(
+                    offset: const Offset(1, 1),
+                    blurRadius: 3,
+                    color: Colors.white.withOpacity(0.8),
+                  ),
+                ],
               ),
             ),
-            const SizedBox(height: 20),
-            Text(
-              emoji,
-              style: const TextStyle(fontSize: 60),
+            const SizedBox(height: 12),
+            Image.asset(
+              imagePath,
+              width: 100,
+              height: 100,
+              errorBuilder: (context, error, stackTrace) {
+                return Text(
+                  ColorUtils.getEarthquakeEmoji(latestEarthquake.magnitude),
+                  style: const TextStyle(fontSize: 50),
+                );
+              },
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 12),
             Text(
               latestEarthquake.koreanRegionName,
-              style: const TextStyle(
-                fontSize: 28,
+              style: TextStyle(
+                fontSize: 24,
                 fontWeight: FontWeight.bold,
+                shadows: [
+                  Shadow(
+                    offset: const Offset(1, 1),
+                    blurRadius: 3,
+                    color: Colors.white.withOpacity(0.8),
+                  ),
+                ],
               ),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 8),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -207,14 +283,28 @@ class _HomeScreenState extends State<HomeScreen> {
                   style: TextStyle(
                     fontSize: 20,
                     color: Colors.grey[600],
+                    shadows: [
+                      Shadow(
+                        offset: const Offset(1, 1),
+                        blurRadius: 2,
+                        color: Colors.white.withOpacity(0.8),
+                      ),
+                    ],
                   ),
                 ),
                 Text(
                   latestEarthquake.magnitude.toStringAsFixed(1),
                   style: TextStyle(
-                    fontSize: 32,
+                    fontSize: 28,
                     fontWeight: FontWeight.bold,
                     color: color,
+                    shadows: [
+                      Shadow(
+                        offset: const Offset(1, 1),
+                        blurRadius: 3,
+                        color: Colors.white.withOpacity(0.8),
+                      ),
+                    ],
                   ),
                 ),
               ],
@@ -222,27 +312,49 @@ class _HomeScreenState extends State<HomeScreen> {
             const SizedBox(height: 8),
             Text(
               '최대 진도: ${ColorUtils.getIntensityDescription(latestEarthquake.maxIntensity)}',
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w500,
+                shadows: [
+                  Shadow(
+                    offset: const Offset(1, 1),
+                    blurRadius: 2,
+                    color: Colors.white.withOpacity(0.8),
+                  ),
+                ],
               ),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 8),
             Text(
               '발생: ${dateFormat.format(latestEarthquake.detectedAt)}',
               style: TextStyle(
-                fontSize: 16,
+                fontSize: 14,
                 color: Colors.grey[600],
+                shadows: [
+                  Shadow(
+                    offset: const Offset(1, 1),
+                    blurRadius: 2,
+                    color: Colors.white.withOpacity(0.8),
+                  ),
+                ],
               ),
             ),
             Text(
               '발표: ${dateFormat.format(latestEarthquake.announcedAt)}',
               style: TextStyle(
-                fontSize: 16,
+                fontSize: 14,
                 color: Colors.grey[600],
+                shadows: [
+                  Shadow(
+                    offset: const Offset(1, 1),
+                    blurRadius: 2,
+                    color: Colors.white.withOpacity(0.8),
+                  ),
+                ],
               ),
             ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -283,17 +395,44 @@ class _HomeScreenState extends State<HomeScreen> {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 12),
-              child: Text(
-                _formatDateHeader(dateKey),
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black87,
-                ),
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              decoration: BoxDecoration(
+                color: Colors.grey[100],
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: Colors.grey[300]!),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    _formatDateHeader(dateKey),
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87,
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: Colors.blue[100],
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Text(
+                      '${earthquakesForDate.length}\uac74',
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.blue[700],
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
+            const SizedBox(height: 8),
             ...earthquakesForDate.map((earthquake) => Padding(
               padding: const EdgeInsets.only(bottom: 8),
               child: EarthquakeCard(
@@ -303,6 +442,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 },
               ),
             )),
+            const SizedBox(height: 16),
           ],
         );
       },
@@ -317,11 +457,11 @@ class _HomeScreenState extends State<HomeScreen> {
     final targetDate = DateTime(date.year, date.month, date.day);
     
     if (targetDate == today) {
-      return '오늘';
+      return '오늘 (${DateFormat('yyyy년 MM월 dd일').format(date)})';
     } else if (targetDate == yesterday) {
-      return '어제';
+      return '어제 (${DateFormat('yyyy년 MM월 dd일').format(date)})';
     } else {
-      return DateFormat('MM월 dd일 (E)', 'ko_KR').format(date);
+      return DateFormat('yyyy년 MM월 dd일').format(date);
     }
   }
 

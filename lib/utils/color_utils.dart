@@ -31,6 +31,16 @@ class ColorUtils {
     }
   }
 
+  static String getEarthquakeImagePath(double magnitude) {
+    if (magnitude <= 3.0) {
+      return 'assets/images/image_under3.png';
+    } else if (magnitude <= 5.0) {
+      return 'assets/images/image_over3.png';
+    } else {
+      return 'assets/images/image_over5.png';
+    }
+  }
+
   static String getIntensityDescription(int intensity) {
     switch (intensity) {
       case 0:
