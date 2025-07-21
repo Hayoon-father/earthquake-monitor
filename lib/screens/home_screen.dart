@@ -236,7 +236,7 @@ class _HomeScreenState extends State<HomeScreen> {
               style: TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
-                color: color,
+                color: Colors.blue,
                 shadows: [
                   Shadow(
                     offset: const Offset(1, 1),
@@ -297,7 +297,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   style: TextStyle(
                     fontSize: 28,
                     fontWeight: FontWeight.bold,
-                    color: color,
+                    color: Colors.blue,
                     shadows: [
                       Shadow(
                         offset: const Offset(1, 1),

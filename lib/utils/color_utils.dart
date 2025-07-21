@@ -5,7 +5,7 @@ class ColorUtils {
     if (magnitude <= 3.0) {
       return Colors.blue;
     } else if (magnitude <= 5.0) {
-      return Colors.yellow;
+      return Colors.orange;
     } else {
       return Colors.red;
     }
@@ -15,7 +15,7 @@ class ColorUtils {
     if (magnitude <= 3.0) {
       return '🔵';
     } else if (magnitude <= 5.0) {
-      return '🟡';
+      return '🟠';
     } else {
       return '🔴';
     }
@@ -25,7 +25,7 @@ class ColorUtils {
     if (magnitude <= 3.0) {
       return Colors.blue.withOpacity(0.1);
     } else if (magnitude <= 5.0) {
-      return Colors.yellow.withOpacity(0.1);
+      return Colors.orange.withOpacity(0.1);
     } else {
       return Colors.red.withOpacity(0.1);
     }
