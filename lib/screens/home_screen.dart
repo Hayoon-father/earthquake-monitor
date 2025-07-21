@@ -362,16 +362,26 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildHistoricalEarthquakesList() {
     if (_earthquakes.length <= 1) {
-      return const Center(
-        child: Text(
-          '과거 지진 데이터가 없습니다',
-          style: TextStyle(fontSize: 16),
+      final latestEarthquake = _earthquakes.isNotEmpty ? _earthquakes.first : null;
+      final backgroundColor = latestEarthquake != null 
+          ? ColorUtils.getBackgroundColor(latestEarthquake.magnitude)
+          : Colors.white;
+      
+      return Container(
+        color: backgroundColor,
+        child: const Center(
+          child: Text(
+            '과거 지진 데이터가 없습니다',
+            style: TextStyle(fontSize: 16),
+          ),
         ),
       );
     }
 
     // 최신을 제외한 나머지 지진들
     final historicalEarthquakes = _earthquakes.skip(1).toList();
+    final latestEarthquake = _earthquakes.first;
+    final backgroundColor = ColorUtils.getBackgroundColor(latestEarthquake.magnitude);
     
     // 날짜별로 그룹화
     final Map<String, List<EarthquakeModel>> groupedByDate = {};
@@ -385,8 +395,10 @@ class _HomeScreenState extends State<HomeScreen> {
       groupedByDate[dateKey]!.add(earthquake);
     }
     
-    return ListView.builder(
-      padding: const EdgeInsets.all(16),
+    return Container(
+      color: backgroundColor,
+      child: ListView.builder(
+        padding: const EdgeInsets.all(16),
       itemCount: groupedByDate.length,
       itemBuilder: (context, index) {
         final dateKey = groupedByDate.keys.elementAt(index);
@@ -446,6 +458,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         );
       },
+      ),
     );
   }
 
